@@ -3,6 +3,7 @@ import Login from './Login/Login';
 import Register from './Register/Register';
 import Home from './Home/Home';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Book from './Book/Book';
 
 function ProtectedRoute({ isLoggedIn, children }) {
   return isLoggedIn ? children : <Navigate to="/" replace />;
@@ -29,6 +30,11 @@ function App() {
               <Home />
             } 
           />
+        // Add a new route here using the ProtectedRoute component
+        <Route
+          path="/book/:id"
+          element={<ProtectedRoute isLoggedIn={isLoggedIn}><Book /></ProtectedRoute>}
+        />
           <Route 
             path="*" 
             element={<Navigate to="/" replace />} 
