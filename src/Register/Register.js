@@ -1,11 +1,15 @@
-import React, { useState , useEffect} from 'react';
+import React from 'react';
+import { useState, useEffect } from 'react';
 import './Register.css';
-
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 
 
+
 export default function Register() {
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState({
         username: '',
         email:  '',
@@ -85,6 +89,8 @@ export default function Register() {
             password: formData.password
         };
 
+        console.log('Backend URL:', backend_url);
+
         fetch(`${backend_url}/register`, {
             method: 'POST',
             headers: {
@@ -96,9 +102,10 @@ export default function Register() {
             return response.text(); 
         })
         .then(data => {
+            console.log("Response from backend:", data);
             if (data.includes('Registration successful')) {
                 setSuccess('Registration successful. Please log in!');
-                window.location.href = '/';
+                navigate('/home');
             } else {
                 throw new Error(data);  
             }
@@ -169,7 +176,7 @@ export default function Register() {
                     />
                 </label>
                 <br />
-                <button type="submit">Submit</button>
+                <button type="submit" >Submit</button>
                 <p className="or">or</p>
                 <a className='text'  href={googleAuthUrl} >
                 <FontAwesomeIcon className = 'gicon' icon={faGoogle} />

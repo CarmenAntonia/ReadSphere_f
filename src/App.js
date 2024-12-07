@@ -2,11 +2,13 @@ import './App.css';
 import Login from './Login/Login';
 import Register from './Register/Register';
 import Home from './Home/Home';
+import Header from './components/Header/Header';
+import Profile from './Profile/Profile';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Book from './Book/Book';
 
 function ProtectedRoute({ isLoggedIn, children }) {
-  return isLoggedIn ? children : <Navigate to="/" replace />;
+  return isLoggedIn ? children : <Navigate to="/login" replace />;
 }
 
 function App() {
@@ -24,10 +26,22 @@ function App() {
             path="/register" 
             element={!isLoggedIn ? <Register /> : <Navigate to="/home" replace />} 
           />
+          <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute isLoggedIn={isLoggedIn}>
+                    <Header />
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
           <Route 
             path="/home" 
             element={
+              <>
               <Home />
+              <Header />
+              </>
             } 
           />
         // Add a new route here using the ProtectedRoute component
