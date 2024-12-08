@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import './Home.css';
 
 export default function Home () {
-  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+  const backendUrl = 'http://localhost:8080';
 
   const [books, setBooks] = useState([]);
   const [displayedBooks, setDisplayedBooks] = useState([]);
@@ -21,7 +21,8 @@ export default function Home () {
     .then(token => {
         if(token !== '') {
           sessionStorage.clear();
-          sessionStorage.setItem('token', token); 
+          sessionStorage.setItem('token', token[0]);
+          sessionStorage.setItem('userId', token[1]); 
         }
     })
       .catch(error => {

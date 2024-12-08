@@ -1,10 +1,13 @@
 import React, { useState, useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Login.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 
 
 export default function Login() {
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -94,7 +97,7 @@ export default function Login() {
         .then(userId => {
             sessionStorage.clear();
             sessionStorage.setItem('userId', userId);  
-            window.location.href = '/home';
+            navigate('/home');
         })
         .catch(error => {
             console.error('Error:', error);  
