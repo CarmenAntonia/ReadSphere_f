@@ -4,7 +4,6 @@
     gap: 3lvh;
     justify-content: space-between;
     list-style-type: none; 
-    background-color: rgb(239, 217, 187);
     width: 100%;
     height: 100%;
     overflow-y: auto;
@@ -16,11 +15,11 @@
     align-items: center;
     justify-content: space-between;
     width: 30lvh;
-    border: 1px solid #ddd;
+    border: 1px solid #ddddddac;
     border-radius: 8px;
     padding: 2lvh;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: #fff; 
+    background-color: #dddddd55; 
     cursor: pointer;
   }
   
