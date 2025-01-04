@@ -20,13 +20,13 @@ const Header = () => {
     const [profilePicture, setProfilePicture] = useState(null);
     const [avatarSvg, setAvatarSvg] = useState(null);
     const navigate = useNavigate();
-    const [shrinkHeader, setShrinkHeader] = useState(false);
+    const [headerHeight, setHeaderHeight] = useState(300);
 
     const backend_url = process.env.REACT_APP_BACKEND_URL;
 
     useEffect(() => {
         const token = sessionStorage.getItem('token');
-        const userId = sessionStorage.getItem('userId');
+        const userId = sessionStorage.getItem('userId') || sessionStorage.getItem('userIdGoogle');
 
         console.log('token:', token);
         console.log('userId:', userId);
@@ -57,28 +57,25 @@ const Header = () => {
     };
 
     const fetchProfilePicture = () => {
-    //     fetch(`${backend_url}/profilePicture`, {
-    //         method: 'GET',
-    //         credentials: 'include',
-    //     })
-    //         .then((response) => response.json())
-    //         .then((data) => {
-    //             if (data.profilePicture) {
-    //                 setProfilePicture(data.profilePicture);
-    //             }
-    //         })
-    //         //.catch((error) => console.error('Error fetching profile picture:', error));
-     };
+        const savedProfilePicture = localStorage.getItem('profilePicture');
+        if (savedProfilePicture) {
+            setProfilePicture(savedProfilePicture);
+        } else {
+            const seed = userName || 'guest';
+            const avatar = createAvatar(adventurer, { seed }).toString();
+            setAvatarSvg(avatar);
+        }
+    };
 
     useEffect(() => {
-    if (darkMode) {
-        document.body.classList.add('dark');
-        document.body.classList.remove('light');
-    } else {
-        document.body.classList.add('light');
-        document.body.classList.remove('dark');
-    }
-}, [darkMode]);
+        if (darkMode) {
+            document.body.classList.add('dark');
+            document.body.classList.remove('light');
+        } else {
+            document.body.classList.add('light');
+            document.body.classList.remove('dark');
+        }
+    }, [darkMode]);
 
     useEffect(() => {
         if (!profilePicture) {
@@ -90,10 +87,16 @@ const Header = () => {
 
     useEffect(() => {
         const handleScroll = () => {
-            if (window.scrollY > 50) {
-                setShrinkHeader(true);
-            } else {
-                setShrinkHeader(false);
+            const scrollY = window.scrollY;
+
+            if (scrollY > 50) {
+                setHeaderHeight(150);
+            } else if (scrollY < 50) {
+                const dynamicHeight = Math.max(
+                    150,
+                    300 - (scrollY / 50) * (300 - 150)
+                );
+                setHeaderHeight(dynamicHeight);
             }
         };
 
@@ -114,7 +117,9 @@ const Header = () => {
     };
 
     return (
-        <header className={`header ${shrinkHeader ? 'shrink' : ''}`}>
+        <header className={`header`} style={{
+            height: `${headerHeight}px`, 
+        }}>
             <div className="header-background">
                 <nav className="nav">
                     <h1 className="logo">Read Sphere</h1>
@@ -144,7 +149,7 @@ const Header = () => {
                                 <img
                                     src={profilePicture}
                                     alt="Profile"
-                                    className="profile-picture"
+                                    className="profile_picture"
                                 />
                             ) : (
                                 <div

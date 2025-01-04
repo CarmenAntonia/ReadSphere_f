@@ -62,6 +62,27 @@
   display: none;
 }
 
+.remove-picture-btn {
+  position: absolute;
+  top: 67px;
+  left: -10px;
+  background: #72533d;
+  color: #fff;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.remove-picture-btn:hover {
+  background-color: #e04e4e;
+}
+
 .bio-section {
   margin-top: 20px;
 }
@@ -69,17 +90,17 @@
 .bio-textarea {
   width: 100%;
   height: 80px;
-  padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
   border-radius: 4px;
   resize: none;
+  background-color: #bebaaa83;
   font-size: 14px;
 }
 
 .bio-submit-btn {
   margin-top: 10px;
   padding: 8px 16px;
-  background-color: #007bff;
+  background-color: #72533d;
   color: white;
   border: none;
   border-radius: 4px;
@@ -87,7 +108,7 @@
 }
 
 .bio-submit-btn:hover {
-  background-color: #0056b3;
+  background-color: #463224;
 }
 
 .shelves {
