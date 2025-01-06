@@ -4,6 +4,7 @@ import './Home.css';
 export default function Home () {
   const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
+  const [searchTerm, setSearchTerm] = useState('');
   const [books, setBooks] = useState([]);
   const [displayedBooks, setDisplayedBooks] = useState([]);
 
@@ -56,7 +57,30 @@ useEffect(() => {
     window.location.href = `/book/${id}`;
   }
 
+  const handleSearch = (e) => {
+    const term = e.target.value.toLowerCase();
+    setSearchTerm(term);
+
+    const filteredBooks = books.filter(
+      (book) =>
+        book.title.toLowerCase().includes(term) ||
+        book.author.toLowerCase().includes(term)
+    );
+    setDisplayedBooks(filteredBooks.slice(0, 50)); 
+  };
+
   return (
+    <div className="home-container">
+      {/* Search Bar */}
+      <div className="search-bar">
+        <input
+          type="text"
+          placeholder="Search for books by title or author..."
+          value={searchTerm}
+          onChange={handleSearch}
+          className="search-input"
+        />
+      </div>
       <ul className="books-list">
         {displayedBooks.map(book => (
           <li key={book.bookId} onClick={() => onClickHandle(book.bookId )}>
@@ -68,5 +92,6 @@ useEffect(() => {
           </li>
         ))}
       </ul>
+    </div>
   );
 }
