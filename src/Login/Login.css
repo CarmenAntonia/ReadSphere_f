@@ -1,14 +1,30 @@
 .login-container{
     display: flex;
-    flex-direction: column;
-    height: 100%;
+    flex-direction: row;
+    background-color: #bebaaa;
+    padding: 5lvh;
+    height: 90lvh;
 }
 .login-form {
-    background-color: white;
-    box-shadow: 1px 1px 5px 1px #6e6d6d;
-
+    flex: 1;                   
+    background-color: #d5d1c2;   
+    display: flex;
+    flex-direction: column;
+    justify-content: center;     
+    align-items: center;
+    box-sizing: border-box; 
+    padding-top: 2lvh;
+    padding-bottom: 2lvh;
+    box-shadow: 1px 1px 5px 1px #393838;
 }
 
+.login-photo {
+    flex: 2;                     
+    background-image: url('/Library.jpg');  
+    background-position: center; 
+    background-size: cover;
+    box-shadow: 1px 1px 5px 1px #393838;
+}
 .login-label{
     margin: 10px;
     font-size: 20px;

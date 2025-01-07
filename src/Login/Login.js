@@ -4,7 +4,6 @@ import './Login.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 
-
 export default function Login() {
     const navigate = useNavigate();
 
@@ -166,6 +165,8 @@ export default function Login() {
                 {!formError && error.password && <p className="login-text" style={{color: 'red'}}>{error.password}</p>}
                 {formError && <p className="login-text" style={{color: 'red'}}>{formError}</p>}
             </form>
+            <div className = "login-photo">
+            </div>
         </div>
     );
 }

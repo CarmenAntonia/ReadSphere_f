@@ -105,7 +105,7 @@ export default function Register() {
             console.log("Response from backend:", data);
             if (data.includes('Registration successful')) {
                 setSuccess('Registration successful. Please log in!');
-                navigate('/home');
+                navigate('/');
             } else {
                 throw new Error(data);  
             }
@@ -138,7 +138,7 @@ export default function Register() {
 
     return (
         <div className='reg-container'>
-            <form onSubmit={handleSubmit}>
+            <form className='reg-form' onSubmit={handleSubmit}>
             <h1>Register</h1>
                 <label>
                     Username:
@@ -186,6 +186,8 @@ export default function Register() {
                 {!formError && error.username && <p className="text" style={{ color: 'red' }}>{error.username}</p>}
                 {formError && <p className="text" style={{ color: 'red' }}>{formError}</p>}
             </form>
+            <div className = "photo">
+            </div>
         </div>
     );
 }
