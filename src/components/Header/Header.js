@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom'; 
 import { createAvatar } from '@dicebear/core';
-import { adventurer } from '@dicebear/collection';
+import { openPeeps } from '@dicebear/collection';
 import './Header.css'; 
 
 const Header = () => {
@@ -20,7 +20,6 @@ const Header = () => {
     const [profilePicture, setProfilePicture] = useState(null);
     const [avatarSvg, setAvatarSvg] = useState(null);
     const navigate = useNavigate();
-    const [shrinkHeader, setShrinkHeader] = useState(false);
 
     const backend_url = process.env.REACT_APP_BACKEND_URL;
 
@@ -50,6 +49,7 @@ const Header = () => {
             .then((response) => response.json())
             .then((data) => {
                 if (data.userName) {
+                    console.log('data.userName:', data.userName);
                     setUserName(data.userName);
                 }
             })
@@ -57,49 +57,36 @@ const Header = () => {
     };
 
     const fetchProfilePicture = () => {
-    //     fetch(`${backend_url}/profilePicture`, {
-    //         method: 'GET',
-    //         credentials: 'include',
-    //     })
-    //         .then((response) => response.json())
-    //         .then((data) => {
-    //             if (data.profilePicture) {
-    //                 setProfilePicture(data.profilePicture);
-    //             }
-    //         })
-    //         //.catch((error) => console.error('Error fetching profile picture:', error));
-     };
+        fetch(`${backend_url}/profilePicture`, {
+            method: 'GET',
+            credentials: 'include',
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.profilePicture) {
+                    setProfilePicture(data.profilePicture);
+                }
+            })
+            .catch((error) => console.error('Error fetching profile picture:', error));
+    };
 
     useEffect(() => {
-    if (darkMode) {
-        document.body.classList.add('dark');
-        document.body.classList.remove('light');
-    } else {
-        document.body.classList.add('light');
-        document.body.classList.remove('dark');
-    }
-}, [darkMode]);
+        if (darkMode) {
+            document.body.style.backgroundColor = '#000000';
+            document.body.style.color = '#bebaaa';
+        } else {
+            document.body.style.backgroundColor = '#bebaaa';
+            document.body.style.color = '#000000';
+        }
+    }, [darkMode]);
 
     useEffect(() => {
         if (!profilePicture) {
             const seed = userName || 'guest';
-            const avatar = createAvatar(adventurer, { seed }).toString();
+            const avatar = createAvatar(openPeeps, { seed }).toString();
             setAvatarSvg(avatar);
         }
     }, [profilePicture, userName]);
-
-    useEffect(() => {
-        const handleScroll = () => {
-            if (window.scrollY > 50) {
-                setShrinkHeader(true);
-            } else {
-                setShrinkHeader(false);
-            }
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
 
     const toggleTheme = () => {
         setDarkMode((prevMode) => !prevMode);
@@ -110,11 +97,13 @@ const Header = () => {
     const handleAvatarClick = () => {
         if (isLoggedIn) {
             navigate('/profile');
+        } else {
+            navigate('/login');
         }
     };
 
     return (
-        <header className={`header ${shrinkHeader ? 'shrink' : ''}`}>
+        <header className="header">
             <div className="header-background">
                 <nav className="nav">
                     <h1 className="logo">Read Sphere</h1>

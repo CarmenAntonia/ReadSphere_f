@@ -13,9 +13,6 @@ function ProtectedRoute({ isLoggedIn, children }) {
 
 function App() {
   const isLoggedIn = sessionStorage.getItem('token') || sessionStorage.getItem('userId');
-  
-  console.log('token:', sessionStorage.getItem('token'));
-  console.log('userId:', sessionStorage.getItem('userId'));
 
   return (
     <Router>
@@ -42,8 +39,8 @@ function App() {
             path="/home" 
             element={
               <>
-              <Header />
               <Home />
+              <Header />
               </>
             } 
           />
