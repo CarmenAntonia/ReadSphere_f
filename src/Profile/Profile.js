@@ -8,7 +8,8 @@ const Profile = () => {
   const [username, setUsername] = useState('');
   const [bio, setBio] = useState('');
   const [avatarSvg, setAvatarSvg] = useState(null);
-  const userId = sessionStorage.getItem('userId') || sessionStorage.getItem('userIdGoogle');
+  const userId = sessionStorage.getItem('userId');
+
   const [books, setBooks] = useState([]);
   const [shelves, setShelves] = useState({
     myReadings: [],
@@ -68,6 +69,7 @@ const Profile = () => {
       })
       .catch((error) => console.error('Error updating bio:', error));
   };
+  
 
   useEffect(() => {
     setFilteredBooks(
@@ -76,102 +78,37 @@ const Profile = () => {
       )
     );
   }, [searchTerm, books]);
+
   useEffect(() => {
-    // Check if a profile picture exists in localStorage
-    const storedProfilePicture = localStorage.getItem('profilePicture');
-    if (storedProfilePicture) {
-      setProfilePicture(storedProfilePicture);
-    } else {
+    if (!profilePicture) {
       fetchUserName();
       const avatar = createAvatar(adventurer, { seed: username || 'guest' }).toString();
       setAvatarSvg(avatar);
     }
-  }, [username]);
-  
+  }, [profilePicture, username]);
+
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        const base64Image = e.target.result;
-        setProfilePicture(base64Image);
-  
-        // Save the Base64 string in localStorage
-        localStorage.setItem('profilePicture', base64Image);
-      };
+      reader.onload = (e) => setProfilePicture(e.target.result);
       reader.readAsDataURL(file);
     }
-    window.location.reload();
   };
 
-  const handleRemovePicture = () => {
-    setProfilePicture(null);
-    localStorage.removeItem('profilePicture');
-
-    const avatar = createAvatar(adventurer, { seed: username || 'guest' }).toString();
-    setAvatarSvg(avatar);
-    window.location.reload();
+  const addBookToShelf = (book) => {
+    setShelves((prev) => ({
+      ...prev,
+      [selectedShelf]: [...prev[selectedShelf], book],
+    }));
+    setShowAddBookPopup(false);
   };
 
-  const fetchShelves = () => {
-    fetch(`${backendUrl}/bookshelves/${userId}`, {
-      method: 'GET',
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Shelves data fetched:", data);
-        const userShelves = {
-          myReadings: [],
-          myFutureReadings: [],
-          myCurrentReadings: [],
-        };
-  
-        data.forEach((shelf) => {
-          console.log(`Shelf: ${shelf.shelfName}, Books:`, shelf.books);
-          if (shelf.shelfName === 'My Readings') {
-            userShelves.myReadings = shelf.books || [];
-          } else if (shelf.shelfName === 'My Future Readings') {
-            userShelves.myFutureReadings = shelf.books || [];
-          } else if (shelf.shelfName === 'My Current Readings') {
-            userShelves.myCurrentReadings = shelf.books || [];
-          }
-        });
-  
-        console.log("Processed shelves data:", userShelves);
-        setShelves(userShelves);
-      })
-      .catch((err) => console.error('Error fetching shelves:', err));
-  };  
-  
-  const addBookToShelf = (shelfName, book) => {
-    console.log('userId:', userId);
-    console.log('selectedShelf:', shelfName);
-    console.log('book:', book.bookId);
-    fetch(`${backendUrl}/bookshelves/${userId}/${shelfName}/add-book/${book.bookId}`, {
-      method: 'POST'
-    })
-      .then(() => {
-        setShelves((prev) => ({
-          ...prev,
-          [selectedShelf]: [...prev[selectedShelf], book],
-        }));
-        setShowAddBookPopup(false);
-      })
-      .catch((err) => console.error('Error adding book:', err));
-  };
-  
   const removeBookFromShelf = (shelf, bookId) => {
-    fetch(`${backendUrl}/bookshelves/${userId}/${shelf}/remove-book/${bookId}`, {
-      method: 'DELETE',
-    })
-      .then(() => {
-        setShelves((prev) => ({
-          ...prev,
-          [shelf]: prev[shelf].filter((book) => book.bookId !== bookId),
-        }));
-        fetchShelves();
-      })
-      .catch((err) => console.error('Error removing book:', err));
+    setShelves((prev) => ({
+      ...prev,
+      [shelf]: prev[shelf].filter((book) => book.id !== bookId),
+    }));
   };
 
   return (
@@ -185,11 +122,6 @@ const Profile = () => {
               className="avatar_pp"
               dangerouslySetInnerHTML={{ __html: avatarSvg }}
             />
-          )}
-          {profilePicture && (
-            <button className="remove-picture-btn" onClick={handleRemovePicture}>
-              -
-            </button>
           )}
           <label className="upload-icon">
             <input type="file" accept="image/*" onChange={handleFileUpload} />
@@ -211,24 +143,29 @@ const Profile = () => {
       </div>
 
       <div className="shelves">
-        {Object.entries(shelves).map(([shelfName, shelfBooks]) => (
-          <div key={shelfName} className="shelf">
-            <h3>{shelfName}</h3>
+        {['myReadings', 'myFutureReadings', 'myCurrentReadings'].map((shelfKey) => (
+          <div key={shelfKey} className="shelf">
+            <h3>
+              {shelfKey === 'myReadings'
+                ? 'My Readings'
+                : shelfKey === 'myFutureReadings'
+                ? 'My Future Readings'
+                : 'My Current Readings'}
+            </h3>
             <button
               onClick={() => {
-                setSelectedShelf(shelfName);
+                setSelectedShelf(shelfKey);
                 setShowAddBookPopup(true);
               }}
             >
               Add Book
             </button>
             <ul className="book-list">
-              {shelfBooks.map((book) => (
-                <li key={book.bookId} className="book-item">
+              {shelves[shelfKey].map((book) => (
+                <li key={book.id} className="book-item">
+                  <img src={book.thumbnail || 'default-cover.png'} alt={book.title} className="book-thumbnail" />
                   <span>{book.title}</span>
-                  <button onClick={() => removeBookFromShelf(shelfName, book.bookId)}>
-                    Delete
-                  </button>
+                  <button onClick={() => removeBookFromShelf(shelfKey, book.id)}>Delete</button>
                 </li>
               ))}
             </ul>
@@ -247,7 +184,7 @@ const Profile = () => {
             />
             <ul>
               {filteredBooks.map((book) => (
-                <li key={book.bookId} onClick={() => addBookToShelf(selectedShelf, book)}>
+                <li key={book.id} onClick={() => addBookToShelf(book)}>
                   {book.title}
                 </li>
               ))}
