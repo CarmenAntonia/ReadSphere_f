@@ -76,8 +76,8 @@ const Profile = () => {
       )
     );
   }, [searchTerm, books]);
-  
   useEffect(() => {
+    // Check if a profile picture exists in localStorage
     const storedProfilePicture = localStorage.getItem('profilePicture');
     if (storedProfilePicture) {
       setProfilePicture(storedProfilePicture);
@@ -114,20 +114,34 @@ const Profile = () => {
   };
 
   const fetchShelves = () => {
-    fetch(`${backendUrl}/bookshelves/${userId}/with-books`, {
+    fetch(`${backendUrl}/bookshelves/${userId}`, {
       method: 'GET',
-      credentials: 'include',
     })
-      .then((response) => response.json())
+      .then((res) => res.json())
       .then((data) => {
-        setShelves(data); // data is a map of shelfName -> books
+        console.log("Shelves data fetched:", data);
+        const userShelves = {
+          myReadings: [],
+          myFutureReadings: [],
+          myCurrentReadings: [],
+        };
+  
+        data.forEach((shelf) => {
+          console.log(`Shelf: ${shelf.shelfName}, Books:`, shelf.books);
+          if (shelf.shelfName === 'My Readings') {
+            userShelves.myReadings = shelf.books || [];
+          } else if (shelf.shelfName === 'My Future Readings') {
+            userShelves.myFutureReadings = shelf.books || [];
+          } else if (shelf.shelfName === 'My Current Readings') {
+            userShelves.myCurrentReadings = shelf.books || [];
+          }
+        });
+  
+        console.log("Processed shelves data:", userShelves);
+        setShelves(userShelves);
       })
-      .catch((error) => console.error('Error fetching shelves:', error));
-  };
-
-  useEffect(() => {
-    fetchShelves();
-  }, [backendUrl, userId]);
+      .catch((err) => console.error('Error fetching shelves:', err));
+  };  
   
   const addBookToShelf = (shelfName, book) => {
     console.log('userId:', userId);
