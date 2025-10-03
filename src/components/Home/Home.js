@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import './Home.css';
+import SearchBar from "../SearchBar/SearchBar";
 
 export default function Home () {
   const backendUrl = 'http://localhost:8080';
@@ -57,16 +58,22 @@ useEffect(() => {
   }
 
   return (
-      <ul className="books-list">
-        {displayedBooks.map(book => (
-          <li key={book.bookId} onClick={() => onClickHandle(book.bookId )}>
-            <img src={book.coverPictureUrl} alt={book.title} />
-            <div className="info">
-              <h4>{book.title}</h4>
-              <p>{book.author}</p>
-            </div>
-          </li>
-        ))}
-      </ul>
+      <div>
+          <SearchBar
+              books={books}
+              setDisplayedBooks={setDisplayedBooks}
+          />
+          <ul className="books-list">
+            {displayedBooks.map(book => (
+              <li key={book.bookId} onClick={() => onClickHandle(book.bookId )}>
+                <img src={book.coverPictureUrl} alt={book.title} />
+                <div className="info">
+                  <h4>{book.title}</h4>
+                  <p>{book.author}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+      </div>
   );
 }
