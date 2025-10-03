@@ -1,0 +1,50 @@
+.search-container {
+    position: relative;
+    width: 80%;
+    margin: 20px auto;
+}
+
+.search-input {
+    width: 90%;
+    padding: 8px 30px 8px 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.clear-btn {
+    position: absolute;
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #888;
+    width: 35px;
+}
+.clear-btn:hover {
+    color: #555;
+}
+
+.search-dropdown {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #ccc;
+    border-top: none;
+    max-height: 150px;
+    overflow-y: auto;
+    position: absolute;
+    width: 100%;
+    background: white;
+    z-index: 1000;
+    border-radius: 0 0 4px 4px;
+}
+
+.search-item {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.search-item:hover {
+    background-color: #f0f0f0;
+}
