@@ -132,6 +132,11 @@
     margin-right: 5lvh;
 }
 
+.add-btn {
+    background-color: #8a6d52;
+    margin-right: 5lvh;
+}
+
 .btn:hover {
     background-color: #5da85ed7;
     transform: scale(1.05);
@@ -142,6 +147,40 @@
     transform: scale(1.05);
 }
 
+.add-btn:hover {
+    background-color: #5da85ed7;
+    transform: scale(1.05);
+}
+
 .btn:active {
     transform: scale(0.98);
+}
+
+.dropdown {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    z-index: 10;
+    padding: 8px 0;
+    min-width: 180px;
+}
+
+.dropdown button {
+    display: block;
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 10px 15px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+    color: black;
+}
+
+.dropdown button:hover {
+    background-color: #f0f0f0;
 }

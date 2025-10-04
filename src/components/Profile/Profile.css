@@ -1,5 +1,24 @@
+.profile-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+    padding: 1rem;
+}
+
 .profile-card {
-    max-width: 400px;
+    flex: 1;
+    margin: 40px auto;
+    padding: 2rem;
+    background: linear-gradient(to bottom, #b5855e, #d2b48c, #f5e6d3);
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    font-family: "Inter", sans-serif;
+    color: #2d2d2d;
+}
+
+.shelves-card {
+    flex: 2;
     margin: 40px auto;
     padding: 2rem;
     background: linear-gradient(to bottom, #b5855e, #d2b48c, #f5e6d3);
