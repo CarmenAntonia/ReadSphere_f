@@ -4,18 +4,21 @@ import Register from './components/Register/Register';
 import Home from './components/Home/Home';
 import Header from './components/Header/Header';
 import Profile from './components/Profile/Profile';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import {Routes, Route, Navigate} from 'react-router-dom';
 import Book from './components/Book/Book';
+import {LoginContext, useLogin} from './context/LoginContext';
+import {useContext} from "react";
+import GoogleLoginRedirect from "./GoogleLoginRedirect";
 
-function ProtectedRoute({ isLoggedIn, children }) {
+function ProtectedRoute({ children }) {
+  const { isLoggedIn } = useLogin();
   return isLoggedIn ? children : <Navigate to="/login" replace />;
 }
 
 function App() {
-  const isLoggedIn = sessionStorage.getItem('token') || sessionStorage.getItem('userId');
+    const { isLoggedIn } = useContext(LoginContext);
 
-  return (
-    <Router>
+    return (
     <div className="App">
      {isLoggedIn && <Header />}
       <Routes>
@@ -27,6 +30,7 @@ function App() {
             path="/register" 
             element={!isLoggedIn ? <Register /> : <Navigate to="/home" replace />} 
           />
+          <Route path="/google-login-redirect" element={<GoogleLoginRedirect />} />
           <Route
                 path="/profile"
                 element={
@@ -38,7 +42,9 @@ function App() {
           <Route 
             path="/home" 
             element={
-             <Home />
+              <ProtectedRoute isLoggedIn={isLoggedIn}>
+                <Home />
+              </ProtectedRoute>
             } 
           />
         <Route
@@ -51,7 +57,6 @@ function App() {
           />
       </Routes>
     </div>
-    </Router>
   );
 }
 

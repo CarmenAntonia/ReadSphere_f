@@ -2,14 +2,17 @@ import React, { useContext } from "react";
 import {useNavigate, Link, useLocation} from "react-router-dom";
 import { UserContext } from "../../context/UserContext";
 import "./Header.css";
+import {useLogin} from "../../context/LoginContext";
 
 export default function Header() {
     const { userName, avatarSvg } = useContext(UserContext);
+    const { setIsLoggedIn } = useLogin();
     const navigate = useNavigate();
     const location = useLocation();
 
     const handleLogout = () => {
         sessionStorage.clear();
+        setIsLoggedIn(false);
     };
 
     return (
