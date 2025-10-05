@@ -62,7 +62,7 @@ export default function UserShelves() {
                         {isOpen && (
                             <ul className="shelves-books-list">
                                 {booksInShelf.length === 0 ? (
-                                    <p>No books in this shelf.</p>
+                                    <p style={{ color: "white" }}>No books in this shelf.</p>
                                 ) : (
                                     booksInShelf.map(book => (
                                         <li key={book.bookId} onClick={() => onClickBook(book.bookId)}>
