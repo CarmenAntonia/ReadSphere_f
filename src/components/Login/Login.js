@@ -1,11 +1,13 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
+import {useLogin} from "../../context/LoginContext";
 
 export default function Login() {
     const navigate = useNavigate();
+    const { setIsLoggedIn } = useLogin();
 
     const [formData, setFormData] = useState({
         email: '',
@@ -95,7 +97,8 @@ export default function Login() {
         })
         .then(userId => {
             sessionStorage.clear();
-            sessionStorage.setItem('userId', userId);  
+            sessionStorage.setItem('userId', userId);
+            setIsLoggedIn(true);
             navigate('/home');
         })
         .catch(error => {
@@ -109,21 +112,6 @@ export default function Login() {
     const backend_url = process.env.REACT_APP_BACKEND_URL;
 
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=${redirect_uri}&response_type=code&client_id=${client_id}&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&access_type=offline&prompt=select_account`;
-
-    useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code');
-        
-        if (code) {
-           fetch(`${backend_url}/account?code=${code}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(response => response.text())
-        .catch(error => console.error('Error fetching access token:', error));
-    }
-}, [backend_url]);
 
     return (
         <div className="login-container">

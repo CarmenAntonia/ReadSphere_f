@@ -8,49 +8,26 @@ export default function Home () {
   const [books, setBooks] = useState([]);
   const [displayedBooks, setDisplayedBooks] = useState([]);
 
-   useEffect (() => {
-      fetch( `${backendUrl}/token`, {
-          method: 'GET',
-          credentials: 'include',
+  useEffect(() => {
+      fetch(`${backendUrl}/getBooks`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+      },
       })
-      .then(response => {
-        if (!response.ok) {
+        .then(response => {
+          if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.text(); 
-    })
-    .then(token => {
-        if(token !== '') {
-          sessionStorage.clear();
-          sessionStorage.setItem('token', token[0]);
-          sessionStorage.setItem('userId', token[1]); 
-        }
-    })
-      .catch(error => {
+          }
+          return response.json();
+        })
+        .then(books => {
+          setBooks(books);
+          setDisplayedBooks(books.slice(0, 50));
+        })
+        .catch(error => {
           console.error('Error:', error);
-      });
-},[backendUrl]);
-
-useEffect(() => {
-  fetch(`${backendUrl}/getBooks`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-  },
-  })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then(books => {
-      setBooks(books);
-      setDisplayedBooks(books.slice(0, 50));
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
+        });
   }, [backendUrl]);
 
   const onClickHandle = (id) => {
